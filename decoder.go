@@ -16,7 +16,7 @@ type Param struct {
 }
 type MethodData struct {
 	Name   string
-	Params []*Param
+	Params []Param
 }
 
 // ethereum transaction data decoder
@@ -36,7 +36,7 @@ func (d *ABIDecoder) SetABI(contractAbi string) {
 	d.myabi = myabi
 }
 
-func (d *ABIDecoder) DecodeMethod(txData string) (*MethodData, error) {
+func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 	if strings.HasPrefix(txData, "0x") {
 		txData = txData[2:]
 	}
@@ -51,7 +51,6 @@ func (d *ABIDecoder) DecodeMethod(txData string) (*MethodData, error) {
 		log.Fatal(err)
 	}
 
-
 	decodedData, err := hex.DecodeString(txData[8:])
 	if err != nil {
 		log.Fatal(err)
@@ -59,16 +58,16 @@ func (d *ABIDecoder) DecodeMethod(txData string) (*MethodData, error) {
 
 	inputs, err := method.Inputs.Unpack(decodedData)
 	if err != nil {
-		return nil, err
+		return MethodData{}, err
 	}
 
 	nonIndexedArgs := method.Inputs.NonIndexed()
 
-	retData := &MethodData{}
+	retData := MethodData{}
 	retData.Name = method.Name
 	for i, input := range inputs {
 		arg := nonIndexedArgs[i]
-		param := &Param{
+		param := Param{
 			Name:  arg.Name,
 			Value: fmt.Sprintf("%v", input),
 			Type:  arg.Type.String(),
