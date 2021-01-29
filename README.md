@@ -88,7 +88,7 @@ func main()  {
  ```
 
 
-## Contributing
+## Contribution
 - Fork this repository
 - Clone your repository
 - Install dependencies

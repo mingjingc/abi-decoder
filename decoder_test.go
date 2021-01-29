@@ -4,22 +4,24 @@ import "testing"
 import "github.com/stretchr/testify/assert"
 
 /*
-pragma solidity >=0.4.25;
 contract HelloWorld {
-	string public name;
-	uint256 public age;
-	address public addr;
+    string public name;
+    uint256 public age;
+    address public addr;
 
-	function save(string _name, uint256 _age, address _addr) external {
-		name = _name;
-		age = _age;
-		addr = _addr;
-	}
+    event StudentAdded(string indexed name, uint256 age, address _addr);
+    function save(string _name, uint256 _age, address _addr) external {
+        name = _name;
+        age = _age;
+        addr = _addr;
+
+        emit StudentAdded(_name, _age, _addr);
+    }
 }
 */
 
 var testAbi = `
-[
+	[
 	{
 		"constant": true,
 		"inputs": [],
@@ -83,17 +85,39 @@ var testAbi = `
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "age",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_addr",
+				"type": "address"
+			}
+		],
+		"name": "StudentAdded",
+		"type": "event"
 	}
 ]
-	`
+`
 
-var testBytecode = "0x19e7a9660000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000005a4728ca063b522c0b728f8000000000000000000000000000000000839c6f5a014cbfa319e8fdfa01aac186638945a80000000000000000000000000000000000000000000000000000000000000006e5b08fe6988e0000000000000000000000000000000000000000000000000000"
+var testTransactionData = "0x19e7a9660000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000005a4728ca063b522c0b728f8000000000000000000000000000000000839c6f5a014cbfa319e8fdfa01aac186638945a80000000000000000000000000000000000000000000000000000000000000006e5b08fe6988e0000000000000000000000000000000000000000000000000000"
 
 func TestABIDecoder_DecodeMethod(t *testing.T) {
 	abiDecoder := NewABIDecoder()
 	abiDecoder.SetABI(testAbi)
 
-	md, err := abiDecoder.DecodeMethod(testBytecode)
+	md, err := abiDecoder.DecodeMethod(testTransactionData)
 	if err!=nil {
 		t.Error(err)
 	}

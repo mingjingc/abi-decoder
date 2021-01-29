@@ -77,3 +77,7 @@ func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 
 	return retData, nil
 }
+
+func (d *ABIDecoder) ABI() abi.ABI  {
+	return d.myabi
+}

@@ -92,4 +92,6 @@ func main()  {
 		fmt.Println(param)
 		fmt.Println(reflect.TypeOf(param.Value))
 	}
+
+	txDataDecoder.ABI().Unpack()
 }
