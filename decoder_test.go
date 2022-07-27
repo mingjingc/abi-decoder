@@ -1,7 +1,10 @@
 package decoder
 
-import "testing"
-import "github.com/stretchr/testify/assert"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 /*
 contract HelloWorld {
@@ -118,24 +121,24 @@ func TestABIDecoder_DecodeMethod(t *testing.T) {
 	abiDecoder.SetABI(testAbi)
 
 	md, err := abiDecoder.DecodeMethod(testTransactionData)
-	if err!=nil {
+	if err != nil {
 		t.Error(err)
 	}
 
-	expectMd := MethodData  {
-		Name:"save",
+	expectMd := MethodData{
+		Name: "save",
 		Params: []Param{
-			Param{
+			{
 				Name:  "_name",
 				Value: "小明",
 				Type:  "string",
 			},
-			Param{
+			{
 				Name:  "_age",
 				Value: "120000000000000000000000000000000000000",
 				Type:  "uint256",
 			},
-			Param{
+			{
 				Name:  "_addr",
 				Value: "0x839C6f5a014cbfA319e8fDFA01AaC186638945A8",
 				Type:  "address",
@@ -143,10 +146,10 @@ func TestABIDecoder_DecodeMethod(t *testing.T) {
 		},
 	}
 
-	assert.EqualValues(t,md.Name,expectMd.Name)
-	assert.True(t,len(md.Params) == len(expectMd.Params))
+	assert.EqualValues(t, md.Name, expectMd.Name)
+	assert.True(t, len(md.Params) == len(expectMd.Params))
 
-	for i:=0;i<len(md.Params);i++{
+	for i := 0; i < len(md.Params); i++ {
 		assert.Equal(t, md.Params[i], expectMd.Params[i])
 	}
 }
