@@ -3,14 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"reflect"
 
-	"github.com/ethereum/go-ethereum/common"
-
-	"github.com/ethereum/go-ethereum/ethclient"
 	decoder "github.com/mingjingc/abi-decoder"
 
-	"log"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 var myContractAbi = `
