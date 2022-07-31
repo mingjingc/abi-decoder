@@ -1,5 +1,5 @@
  ## ABI-DECODER
- decode ethereum transaction data of contract call. Inspired by [abi-decoder](https://github.com/ConsenSys/abi-decoder)
+Go library for decoding data params and events from etherem transactions. Inspired by [abi-decoder](https://github.com/ConsenSys/abi-decoder)
 
  ## Example
  ```go
