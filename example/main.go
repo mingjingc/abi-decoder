@@ -127,6 +127,10 @@ func main() {
 
 	txHash := common.HexToHash("0x38687ffd5526c125c0c4074e9c39855fad31cbcd1c77b52650bebfa11b365bc0")
 	r, err := client.TransactionReceipt(context.Background(), txHash)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	decodedLogs, err := txDataDecoder.DecodeLogs(r.Logs)
 	if err != nil {
 		log.Fatal(err)

@@ -88,8 +88,7 @@ func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 	return retData, nil
 }
 
-// DecodeLogs decode contract events from transaction receipt logs
-// reference: https://ethereum.stackexchange.com/questions/28637/how-to-decode-log-data-in-go
+// DecodeLogs decode contract events from log
 func (d *ABIDecoder) DecodeLogs(logs []*types.Log) ([]DecodedLog, error) {
 	decodeLogs := make([]DecodedLog, 0, len(logs))
 
