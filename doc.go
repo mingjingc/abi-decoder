@@ -1,6 +1,5 @@
 package decoder
 
-
 /*
 以太坊合约调用 transaction data 格式为：
 method id(前4个字节) + 各个参数描述，具体规律还未知
@@ -10,10 +9,14 @@ contract HelloWorld {
     string public name;
     uint256 public age;
     address public addr;
-    function save(string _name, uint256 _age, address _addr) external {
+
+    event StudentAdded(string indexed name, uint256 age, address indexed _addr);
+    function save(string memory _name, uint256 _age, address _addr) external {
         name = _name;
         age = _age;
         addr = _addr;
+
+        emit StudentAdded(_name, _age, _addr);
     }
 
     function save2(string s1, string s2, string s3) external {

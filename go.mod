@@ -1,8 +1,8 @@
 module github.com/mingjingc/abi-decoder
 
 require (
-	github.com/ethereum/go-ethereum v1.9.25
-	github.com/stretchr/testify v1.4.0
+	github.com/ethereum/go-ethereum v1.10.21
+	github.com/stretchr/testify v1.7.2
 )
 
-go 1.15
+go 1.16
