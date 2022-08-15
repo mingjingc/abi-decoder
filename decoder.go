@@ -51,17 +51,17 @@ func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 
 	decodedSig, err := hex.DecodeString(txData[:8])
 	if err != nil {
-		log.Fatal(err)
+		return MethodData{}, err
 	}
 
 	method, err := d.myabi.MethodById(decodedSig)
 	if err != nil {
-		log.Fatal(err)
+		return MethodData{}, err
 	}
 
 	decodedData, err := hex.DecodeString(txData[8:])
 	if err != nil {
-		log.Fatal(err)
+		return MethodData{}, err
 	}
 
 	inputs, err := method.Inputs.Unpack(decodedData)
