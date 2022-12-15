@@ -72,7 +72,7 @@ func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 	nonIndexedArgs := method.Inputs.NonIndexed()
 
 	retData := MethodData{}
-	retData.Name = method.Name
+	retData.Name = method.RawName
 	for i, input := range inputs {
 		arg := nonIndexedArgs[i]
 		param := Param{
