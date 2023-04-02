@@ -19,7 +19,7 @@ type DecodedLog struct {
 
 type Param struct {
 	Name  string
-	Value string
+	Value interface{}
 	Type  string
 }
 type MethodData struct {
@@ -77,7 +77,7 @@ func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 		arg := nonIndexedArgs[i]
 		param := Param{
 			Name:  arg.Name,
-			Value: fmt.Sprintf("%v", input),
+			Value: input,
 			Type:  arg.Type.String(),
 		}
 		retData.Params = append(retData.Params, param)
