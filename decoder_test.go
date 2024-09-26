@@ -1,8 +1,10 @@
 package decoder
 
 import (
+	"math/big"
 	"testing"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,99 +26,126 @@ contract HelloWorld {
 */
 
 var testAbi = `
-	[
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "name",
-		"outputs": [
+[
 			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "age",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "StudentAdded",
+				"type": "event"
 			},
 			{
-				"name": "_age",
-				"type": "uint256"
+				"inputs": [],
+				"name": "addr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
-				"name": "_addr",
-				"type": "address"
-			}
-		],
-		"name": "save",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "age",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "addr",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
+				"inputs": [],
 				"name": "age",
-				"type": "uint256"
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
-				"indexed": false,
-				"name": "_addr",
-				"type": "address"
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "food",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes[][][]",
+						"name": "data",
+						"type": "bytes[][][]"
+					}
+				],
+				"name": "food2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_age",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "save",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
-		],
-		"name": "StudentAdded",
-		"type": "event"
-	}
 ]
 `
 
-var testTransactionData = "0x19e7a9660000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000005a4728ca063b522c0b728f8000000000000000000000000000000000839c6f5a014cbfa319e8fdfa01aac186638945a80000000000000000000000000000000000000000000000000000000000000006e5b08fe6988e0000000000000000000000000000000000000000000000000000"
-
 func TestABIDecoder_DecodeMethod(t *testing.T) {
+	var testTransactionData = "0x19e7a9660000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000005a4728ca063b522c0b728f8000000000000000000000000000000000839c6f5a014cbfa319e8fdfa01aac186638945a80000000000000000000000000000000000000000000000000000000000000006e5b08fe6988e0000000000000000000000000000000000000000000000000000"
+
 	abiDecoder := NewABIDecoder()
 	abiDecoder.SetABI(testAbi)
 
@@ -125,6 +154,7 @@ func TestABIDecoder_DecodeMethod(t *testing.T) {
 		t.Error(err)
 	}
 
+	age, _ := big.NewInt(0).SetString("120000000000000000000000000000000000000", 10)
 	expectMd := MethodData{
 		Name: "save",
 		Params: []Param{
@@ -135,12 +165,12 @@ func TestABIDecoder_DecodeMethod(t *testing.T) {
 			},
 			{
 				Name:  "_age",
-				Value: "120000000000000000000000000000000000000",
+				Value: age,
 				Type:  "uint256",
 			},
 			{
 				Name:  "_addr",
-				Value: "0x839C6f5a014cbfA319e8fDFA01AaC186638945A8",
+				Value: common.HexToAddress("0x839C6f5a014cbfA319e8fDFA01AaC186638945A8"),
 				Type:  "address",
 			},
 		},

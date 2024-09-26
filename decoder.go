@@ -2,8 +2,8 @@ package decoder
 
 import (
 	"encoding/hex"
-	"fmt"
 	"log"
+	"math/big"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -19,7 +19,7 @@ type DecodedLog struct {
 
 type Param struct {
 	Name  string
-	Value string
+	Value interface{}
 	Type  string
 }
 type MethodData struct {
@@ -77,7 +77,7 @@ func (d *ABIDecoder) DecodeMethod(txData string) (MethodData, error) {
 		arg := nonIndexedArgs[i]
 		param := Param{
 			Name:  arg.Name,
-			Value: fmt.Sprintf("%v", input),
+			Value: input,
 			Type:  arg.Type.String(),
 		}
 		retData.Params = append(retData.Params, param)
@@ -114,16 +114,24 @@ func (d *ABIDecoder) DecodeLogs(logs []*types.Log) ([]DecodedLog, error) {
 			param.Type = input.Type.String()
 			var value interface{}
 			if input.Indexed {
-				value = logItem.Topics[topicIndex]
+				topic := logItem.Topics[topicIndex]
+				if strings.Index(input.Type.String(), "int") > 0 ||
+					strings.Index(input.Type.String(), "uint") > 0 {
+					value = big.NewInt(0).SetBytes(topic.Bytes())
+				} else {
+					value = topic
+				}
+
 				topicIndex++
 			} else {
 				value = dataList[dataIndex]
 				dataIndex++
 			}
-			param.Value = fmt.Sprintf("%v", value)
 
+			param.Value = value
 			params = append(params, param)
 		}
+
 		decodedLog.Params = params
 
 		decodeLogs = append(decodeLogs, decodedLog)
