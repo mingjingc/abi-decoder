@@ -113,12 +113,16 @@ func (d *ABIDecoder) DecodeLogs(logs []*types.Log) ([]DecodedLog, error) {
 			param.Name = input.Name
 			param.Type = input.Type.String()
 			var value interface{}
+			// indexed value are all in topic
 			if input.Indexed {
 				topic := logItem.Topics[topicIndex]
-				if strings.Index(input.Type.String(), "int") > 0 ||
-					strings.Index(input.Type.String(), "uint") > 0 {
+				switch {
+				case strings.Index(input.Type.String(), "int") != -1,
+					strings.Index(input.Type.String(), "uint") != -1:
 					value = big.NewInt(0).SetBytes(topic.Bytes())
-				} else {
+				case strings.Index(input.Type.String(), "address") != -1:
+					value = common.BytesToAddress(topic.Bytes())
+				default:
 					value = topic
 				}
 
