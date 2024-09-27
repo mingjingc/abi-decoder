@@ -9,18 +9,32 @@ import (
 )
 
 /*
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.24;
+
 contract HelloWorld {
     string public name;
     uint256 public age;
     address public addr;
+    uint256 callTimes;
 
-    event StudentAdded(string indexed name, uint256 age, address _addr);
-    function save(string _name, uint256 _age, address _addr) external {
+    event StudentAdded(string indexed name, uint256 indexed  age, address _addr);
+    function save(string memory _name, uint256 _age, address _addr) external {
         name = _name;
         age = _age;
         addr = _addr;
 
         emit StudentAdded(_name, _age, _addr);
+    }
+
+    function food(bytes calldata data) external  {
+        data;
+        callTimes++;
+    }
+
+    function food2(bytes[][][] calldata data) external  {
+        data;
+        callTimes++;
     }
 }
 */
